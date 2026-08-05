@@ -61,6 +61,27 @@ Because it's a live MJPEG stream against a real camera or an actual
 uploaded file, what's on screen is provably real inference, not a canned
 demo clip standing in for one.
 
+## Screenshots
+
+App landing state, streaming the confidence slider / FPS counter / per-class
+counts panel:
+
+![App landing](docs/screenshots/01_landing.png)
+
+Live detection on an uploaded real COCO shelf-image clip — boxes, confidence
+scores, and per-class counts updating in real time:
+
+![Live detection](docs/screenshots/02_detection_active.png)
+
+Raising the confidence threshold to 0.85 — most boxes drop out, only the
+model's most confident detection survives:
+
+![High threshold](docs/screenshots/03_high_threshold.png)
+
+Back at the default 0.25 threshold on a different frame from the same clip:
+
+![Default threshold](docs/screenshots/04_default_state.png)
+
 ## Reproduce
 
 ```bash
