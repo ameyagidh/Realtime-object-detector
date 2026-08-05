@@ -1,0 +1,19 @@
+data/raw/
+data/shelf/
+uploads/
+*.zip
+yolov8n.pt
+__pycache__/
+*.pyc
+.DS_Store
+
+# keep the fine-tuned weights + result plots, ignore the rest of the runs/ dir
+runs/*
+!runs/shelf_finetune/
+runs/shelf_finetune/*
+!runs/shelf_finetune/weights/
+runs/shelf_finetune/weights/*
+!runs/shelf_finetune/weights/best.pt
+!runs/shelf_finetune/*.png
+!runs/shelf_finetune/*.jpg
+*.log

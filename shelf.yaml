@@ -1,0 +1,11 @@
+path: /Users/ameyagidh/AAAmeya/new-projects/ComputerVision/realtime-object-detector/data/shelf
+train: images/train
+val: images/val
+names:
+  0: bottle
+  1: cup
+  2: bowl
+  3: wine glass
+  4: book
+  5: laptop
+  6: cell phone

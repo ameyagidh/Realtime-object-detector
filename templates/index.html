@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Real-Time Object Detection & Tracking</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; background: #111; color: #eee; margin: 0; padding: 24px; }
+    h1 { font-size: 20px; }
+    .row { display: flex; gap: 24px; align-items: flex-start; }
+    #video { border: 1px solid #333; border-radius: 8px; max-width: 720px; width: 100%; }
+    .panel { background: #1b1b1b; border-radius: 8px; padding: 16px; min-width: 260px; }
+    .panel h3 { margin-top: 0; font-size: 14px; color: #aaa; text-transform: uppercase; }
+    #fps { font-size: 32px; font-weight: 600; }
+    #counts div { display: flex; justify-content: space-between; padding: 2px 0; }
+    input[type=range] { width: 100%; }
+    button, input[type=file] { margin-top: 8px; }
+    .badge { font-size: 11px; color: #888; }
+  </style>
+</head>
+<body>
+  <h1>Real-Time Object Detection & Tracking</h1>
+  <p class="badge">weights: {{ weights }} — live inference, not a canned demo</p>
+  <div class="row">
+    <img id="video" src="/video_feed">
+    <div class="panel">
+      <h3>Confidence threshold</h3>
+      <input type="range" id="conf" min="0.05" max="0.9" step="0.05" value="0.25">
+      <span id="confVal">0.25</span>
+
+      <h3>Source</h3>
+      <button onclick="useWebcam()">Use webcam</button><br>
+      <input type="file" id="videoFile" accept="video/*">
+      <button onclick="uploadVideo()">Upload & use video</button>
+
+      <h3>Live FPS</h3>
+      <div id="fps">--</div>
+
+      <h3>Per-class counts</h3>
+      <div id="counts"></div>
+    </div>
+  </div>
+
+  <script>
+    const confSlider = document.getElementById('conf');
+    confSlider.addEventListener('input', () => {
+      document.getElementById('confVal').textContent = confSlider.value;
+      fetch('/set_conf', { method: 'POST', headers: {'Content-Type':'application/x-www-form-urlencoded'}, body: 'conf=' + confSlider.value });
+    });
+
+    function useWebcam() {
+      fetch('/use_webcam', { method: 'POST' }).then(() => location.reload());
+    }
+
+    function uploadVideo() {
+      const f = document.getElementById('videoFile').files[0];
+      if (!f) return;
+      const fd = new FormData();
+      fd.append('video', f);
+      fetch('/upload', { method: 'POST', body: fd }).then(() => location.reload());
+    }
+
+    setInterval(() => {
+      fetch('/stats').then(r => r.json()).then(d => {
+        document.getElementById('fps').textContent = d.fps;
+        const el = document.getElementById('counts');
+        el.innerHTML = Object.entries(d.counts).map(([k,v]) => `<div><span>${k}</span><span>${v}</span></div>`).join('') || '<div>none</div>';
+      });
+    }, 500);
+  </script>
+</body>
+</html>
